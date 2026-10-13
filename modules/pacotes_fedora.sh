@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # pacotes_fedora — pacotes essenciais para Fedora
 # Equivalente ao pacotes_arch (sem yay-bin e sem herdr-bin): tudo via dnf,
-# exceto starship/eza/zoxide/lazygit/tree-sitter-cli/prettier e as fontes
-# Geist/Nerd, que não existem nos repos do Fedora (vêm de GitHub Releases).
+# exceto starship/eza/zoxide/lazygit/tree-sitter-cli/prettier, que não existem
+# nos repos do Fedora (vêm de GitHub Releases/npm). Fontes ficam no fonts.sh.
 # Uso: bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/pacotes_fedora.sh)
 set -euo pipefail
 
@@ -261,47 +261,6 @@ install_cli_extras() {
   fi
 }
 
-install_fonts_extras() {
-  local dest="$HOME/.fonts"
-  mkdir -p "$dest"
-  local tmp url f
-  tmp="$(mktemp -d)"
-
-  # Nerd fonts (Geist Mono, 0xProto, Terminus) — não existem no dnf
-  for f in GeistMono 0xProto Terminus; do
-    url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${f}.zip"
-    log "Baixando fonte $f..."
-    if curl -fL "$url" -o "$tmp/$f.zip"; then
-      unzip -oq "$tmp/$f.zip" -d "$tmp/$f"
-      find "$tmp/$f" -type f \( -name '*.otf' -o -name '*.ttf' \) -exec cp -f {} "$dest/" \;
-      ok "$f instalada em ~/.fonts"
-    else
-      warn "$f: falha no download — verifique manualmente."
-    fi
-  done
-
-  # Geist (regular, sem patch Nerd) — vercel/geist-font
-  local tag
-  tag="$(gh_latest_tag vercel/geist-font || true)"
-  if [[ -n "${tag:-}" ]]; then
-    log "Baixando fonte Geist ($tag)..."
-    if curl -fL "https://github.com/vercel/geist-font/releases/download/${tag}/geist-font-${tag}.zip" -o "$tmp/Geist.zip"; then
-      unzip -oq "$tmp/Geist.zip" -d "$tmp/Geist"
-      find "$tmp/Geist" -type f \( -name '*.otf' -o -name '*.ttf' \) -exec cp -f {} "$dest/" \;
-      ok "Geist instalada em ~/.fonts"
-    else
-      warn "Geist: falha no download — verifique manualmente."
-    fi
-  else
-    warn "Geist: não foi possível obter a versão latest — verifique manualmente."
-  fi
-
-  rm -rf "$tmp"
-  fc-cache -f "$dest" >/dev/null 2>&1 || fc-cache -f
-  ok "fontconfig atualizado"
-}
-
 install_cli_extras
-install_fonts_extras
 
 ok "pacotes_fedora finalizado"
