@@ -136,7 +136,9 @@ install_group "base" \
   neovim \
   bash-completion \
   procs \
-  less
+  less \
+  wl-clipboard \
+  xclip
 
 # ---------- Shell / CLI ----------
 install_group "shell/cli" \
@@ -199,6 +201,9 @@ install_group "fontes/sistema" \
 install_group "desktop apps" \
   blackbox-terminal \
   ulauncher \
-  herdr-bin
+  herdr-bin \
+  loupe \
+  papers \
+  xed
 
 ok "pacotes_arch finalizado (helper: $HELPER)"

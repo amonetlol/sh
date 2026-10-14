@@ -131,7 +131,9 @@ install_group "base" \
   vim \
   neovim \
   bash-completion \
-  less
+  less \
+  wl-clipboard \
+  xclip
 
 # ---------- Shell / CLI (eza, fastfetch, starship, zoxide, lazygit vão para extras) ----------
 install_group "shell/cli" \
@@ -175,6 +177,12 @@ install_group "fontes/sistema" \
   iputils-ping \
   net-tools \
   mesa
+
+# ---------- Apps (visualizadores imagem/docs + editor; Ubuntu 24.04+) ----------
+install_group "apps visualizadores/editor" \
+  loupe \
+  papers \
+  xed
 
 # ---------- Desktop apps (apt → fallback) ----------
 log "Instalando apps de desktop (blackbox-terminal, ulauncher)..."

@@ -19,7 +19,8 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/pa
 
 ### Base Fedora
 ```bash
-# pacotes_fedora — pacotes essenciais via dnf + extras via GitHub Releases (starship, eza, zoxide, lazygit, tree-sitter-cli, prettier)
+# pacotes_fedora — pacotes essenciais (Fedora, RHEL-like)
+# faltantes do dnf via GitHub releases / npm / repo dot
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/pacotes_fedora.sh)
 ```
 
@@ -69,32 +70,38 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/fa
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/setup-nvim.sh)
 
 # snapper — ajusta limites de snapshots do snapper (SNAPPER_LIMIT, padrão 6)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/snapper.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Sistema/snapper.sh)
+
+# chaotic-aur — repositório Chaotic-AUR (Arch)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Sistema/chaotic-aur.sh)
 ```
 
 ### Temas / Rice
 ```bash
 # rice — temas GTK, cursor e ícones (baixa assets do repo dot)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/rice.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Rice/rice.sh)
 
 # rice-base-gnome — rice GNOME: WhiteSur + MacTahoe + Vimix (multi-distro)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/rice-base-gnome.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Rice/rice-base-gnome.sh)
 
 # rice-base-kde — rice KDE: nordic-bluish, breeze, Layan, MacTahoe-nord, Oxygen_Zion, splash CachyOS-Nord
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/rice-base-kde.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Rice/rice-base-kde.sh)
+
+# rice-ulauncher — temas Catppuccin Frappe (sapphire/blue) + autostart daemon sem popup
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Rice/rice-ulauncher.sh)
 
 # sddm-catppuccin-Frappe-theme — SDDM Catppuccin Frappe Blue (Arch)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/sddm-catppuccin-Frappe-theme.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Rice/sddm-catppuccin-Frappe-theme.sh)
 
 # sddm-astronaut-theme — SDDM Astronaut (AUR no Arch; manual nas outras distros)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/sddm-astronaut-theme.sh)
-
-# chaotic-aur — repositório Chaotic-AUR (Arch)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/chaotic-aur.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Rice/sddm-astronaut-theme.sh)
 ```
 
 ### Wallpapers
 ```bash
+# shot — screenshots (grim/slurp) em ~/Imagens/Screenshots + clipboard
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/shot.sh)
+
 # wallpapers — repo wall2 → ~/Imagens/wallpapers
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/wallpapers.sh)
 
@@ -117,13 +124,13 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/re
 ### VMware
 ```bash
 # vmware — open-vm-tools (guest)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/vmware.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/VMware/vmware.sh)
 
 # fix-copy_vmware — autostart vmware-user (copiar/colar)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/fix-copy_vmware.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/VMware/fix-copy_vmware.sh)
 
 # vmware-shared-folder — montagem persistente HGFS (fstab + atalho ~/SERVER)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/vmware-shared-folder.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/VMware/vmware-shared-folder.sh)
 ```
 
 ### Hyprland
