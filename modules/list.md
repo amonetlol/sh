@@ -83,6 +83,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/hy
 # sddm-theme — SDDM Catppuccin Frappe Blue (Arch)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/sddm-theme.sh)
 
+# sddm-astronaut-theme — SDDM Astronaut (AUR no Arch; manual nas outras distros)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/sddm-astronaut-theme.sh)
+
 # chaotic-aur — repositório Chaotic-AUR (Arch)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/chaotic-aur.sh)
 ```
