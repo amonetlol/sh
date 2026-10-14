@@ -19,7 +19,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/pa
 
 ### Base Fedora
 ```bash
-# pacotes_fedora — pacotes essenciais via dnf + extras via GitHub Releases (starship, eza, zoxide, lazygit, tree-sitter-cli, prettier) e fontes Geist/Nerd
+# pacotes_fedora — pacotes essenciais via dnf + extras via GitHub Releases (starship, eza, zoxide, lazygit, tree-sitter-cli, prettier)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/pacotes_fedora.sh)
 ```
 
@@ -67,6 +67,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/fa
 
 # setup-nvim — config neovim (repo amonetlol/nvim)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/setup-nvim.sh)
+
+# snapper — ajusta limites de snapshots do snapper (SNAPPER_LIMIT, padrão 6)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/snapper.sh)
 ```
 
 ### Temas / Rice
@@ -74,14 +77,14 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/se
 # rice — temas GTK, cursor e ícones (baixa assets do repo dot)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/rice.sh)
 
-# rice-base — WhiteSur + MacTahoe + Vimix (multi-distro)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/rice-base.sh)
+# rice-base-gnome — rice GNOME: WhiteSur + MacTahoe + Vimix (multi-distro)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/rice-base-gnome.sh)
 
-# hypr-temas — Hyprland + temas custom (repo amonetlol/custom)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/hypr-temas.sh)
+# rice-base-kde — rice KDE: nordic-bluish, breeze, Layan, MacTahoe-nord, Oxygen_Zion, splash CachyOS-Nord
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/rice-base-kde.sh)
 
-# sddm-theme — SDDM Catppuccin Frappe Blue (Arch)
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/sddm-theme.sh)
+# sddm-catppuccin-Frappe-theme — SDDM Catppuccin Frappe Blue (Arch)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/sddm-catppuccin-Frappe-theme.sh)
 
 # sddm-astronaut-theme — SDDM Astronaut (AUR no Arch; manual nas outras distros)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/sddm-astronaut-theme.sh)
@@ -97,9 +100,6 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/wa
 
 # random-wallpapers — script + timer systemd (5 min)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/random-wallpapers.sh)
-
-# patch-rofi-wallpaper — wallpaper.sh (awww/swww/swaybg) nos temas custom
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/patch-rofi-wallpaper.sh)
 ```
 
 ### Rofi / atalhos
@@ -121,21 +121,31 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/vm
 
 # fix-copy_vmware — autostart vmware-user (copiar/colar)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/fix-copy_vmware.sh)
+
+# vmware-shared-folder — montagem persistente HGFS (fstab + atalho ~/SERVER)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/vmware-shared-folder.sh)
 ```
 
-### Patches Hyprland
+### Hyprland
 ```bash
+# hypr-temas — Hyprland + temas custom (repo amonetlol/custom)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Hyprland/hypr-temas.sh)
+
 # patch-hypr-scripts — gtkthemes em ~/.config/hypr + exec-once
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/patch-hypr-scripts.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Hyprland/patch-hypr-scripts.sh)
+
+# patch-rofi-wallpaper — wallpaper.sh (awww/swww/swaybg) nos temas custom
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Hyprland/patch-rofi-wallpaper.sh)
 ```
 
 ## Variáveis de ambiente opcionais
 
 | Variável | Função |
 |---|---|
-| `INSTALL_SUDO_PASSWORD` | senha sudo não interativa (vmware, chaotic-aur, sddm-theme, rice) |
+| `INSTALL_SUDO_PASSWORD` | senha sudo não interativa (vmware, chaotic-aur, sddm-*, rice, snapper, pacotes_*) |
 | `SUDO_ASKPASS` | askpass alternativo |
 | `DOT_REPO` / `DOT_CACHE` | repositório e cache dos dotfiles |
 | `CUSTOM_REPO` / `CUSTOM_CACHE` | repositório e cache do custom (hypr-temas) |
 | `WALLS_REPO_URL` | repositório de wallpapers (wallpapers.sh) |
 | `DOT_ASSETS` | base URL dos assets do rice |
+| `SNAPPER_LIMIT` | snapshots a manter (snapper.sh, padrão 6) |
