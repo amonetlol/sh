@@ -60,6 +60,8 @@ dot_install_bin() {
   dot_backup_path "$dest"
   mkdir -p "$(dirname "$dest")"
   dot_copy_tree "$src" "$dest"
+  # normaliza fim de linha (repo dot pode ter CRLF)
+  find "$dest" -type f -exec sed -i 's/\r$//' {} + 2>/dev/null || true
   find "$dest" -type f -exec chmod +x {} + 2>/dev/null || true
   ok "Instalado: $dest ($(find "$dest" -maxdepth 1 -type f | wc -l) scripts)"
 }

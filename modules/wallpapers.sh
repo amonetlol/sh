@@ -4,11 +4,18 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-SRC="$REPO_ROOT/wallpapers"
 DEST="$HOME/Imagens/wallpapers"
 WALLS_REPO="${WALLS_REPO_URL:-https://github.com/amonetlol/wall2.git}"
+
+# Piped (bash <(curl ...) ou curl | bash): BASH_SOURCE[0] aponta para /dev/fd/N
+# ou não existe — não há cópia local, vai direto para o clone do wall2.
+SRC=""
+if [[ -n "${BASH_SOURCE[0]:-}" && -f "${BASH_SOURCE[0]}" && -r "${BASH_SOURCE[0]}" ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)" || SCRIPT_DIR=""
+  if [[ -n "$SCRIPT_DIR" && -d "$SCRIPT_DIR/../wallpapers" ]]; then
+    SRC="$(cd "$SCRIPT_DIR/../wallpapers" && pwd)"
+  fi
+fi
 
 log() { printf "[*] %s\n" "$1"; }
 ok() { printf "[OK] %s\n" "$1"; }
@@ -17,7 +24,7 @@ warn() { printf "[AVISO] %s\n" "$1"; }
 mkdir -p "$(dirname "$DEST")"
 
 copy_local_wallpapers() {
-  if [[ ! -d "$SRC" ]]; then
+  if [[ -z "$SRC" || ! -d "$SRC" ]]; then
     return 1
   fi
 
@@ -68,4 +75,9 @@ if copy_local_wallpapers; then
 fi
 
 warn "Pasta local wallpapers/ vazia ou ausente — tentando wall2..."
-clone_remote_wallpapers
+if clone_remote_wallpapers; then
+  exit 0
+fi
+
+printf "[ERRO] Sem wallpapers: falha no clone de %s\n" "$WALLS_REPO" >&2
+exit 1

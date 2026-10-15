@@ -68,6 +68,8 @@ dot_install_home_files() {
     fi
     dot_backup_path "$dest"
     cp -a "$src" "$dest"
+    # repo dot pode ter fim de linha Windows (CRLF) — converte para LF
+    sed -i 's/\r$//' "$dest" 2>/dev/null || true
     ok "Copiado: $dest"
   done
 }
@@ -85,6 +87,8 @@ dot_install_bin() {
   dot_backup_path "$dest"
   mkdir -p "$(dirname "$dest")"
   dot_copy_tree "$src" "$dest"
+  # normaliza fim de linha (repo dot pode ter CRLF)
+  find "$dest" -type f -exec sed -i 's/\r$//' {} + 2>/dev/null || true
   find "$dest" -type f -exec chmod +x {} + 2>/dev/null || true
   ok "Instalado: $dest ($(find "$dest" -maxdepth 1 -type f | wc -l) scripts)"
 }
@@ -143,7 +147,11 @@ esac
 
 
 # Detecta distro depois de carregar as funções
-DISTRO="$(detect_distro)"
+if declare -F detect_distro >/dev/null 2>&1; then
+    DISTRO="$(detect_distro)"
+else
+    DISTRO="unknown"
+fi
 
 
 # ============================================================
