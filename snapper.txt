@@ -1,1 +1,1 @@
-bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/snapper.sh)
+bash <(curl -fsSL https://github.com/amonetlol/sh/raw/refs/heads/main/modules/Sistema/snapper.sh)
