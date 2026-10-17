@@ -1,0 +1,1 @@
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/dot/refs/heads/main/dotfiles/bin/.bin/up-configs.sh)
