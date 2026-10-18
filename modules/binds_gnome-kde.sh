@@ -8,14 +8,14 @@
 #   Terminal     : Alt+Return, Super+Return (Blackbox ou gnome-terminal)
 #   Firefox      : Alt+W, Super+W
 #   Nautilus     : Alt+E, Super+E
-#   Ulauncher    : Alt+D, Super+D
+#   Rofi    : Alt+D, Super+D
 #
 # KDE Plasma: kglobalshortcutsrc (~/.config/kglobalshortcutsrc)
 #   Close window : Alt+Q, Super+Q (kwin "Window Close")
 #   Terminal     : Alt+Return, Super+Return (konsole)
 #   Firefox      : Alt+W, Super+W
 #   Dolphin      : Alt+E, Super+E
-#   Ulauncher    : Alt+D, Super+D
+#   Rofi    : Alt+D, Super+D
 set -euo pipefail
 
 log()  { printf "[*] %s\n" "$*" >&2; }
@@ -69,8 +69,8 @@ if ! command -v firefox &>/dev/null; then
   fi
 fi
 
-ULAUNCHER_CMD="ulauncher"
-command -v "$ULAUNCHER_CMD" &>/dev/null || warn "ulauncher not found — keybind will be set anyway"
+ROFI_CMD="rofi -show drun"
+command -v rofi &>/dev/null || warn "rofi not found — keybind will be set anyway"
 
 require_arch
 
@@ -133,8 +133,10 @@ apply_gnome() {
     "${CUSTOM_BASE}/firefox-super/" \
     "${CUSTOM_BASE}/nautilus-alt/" \
     "${CUSTOM_BASE}/nautilus-super/" \
-    "${CUSTOM_BASE}/ulauncher-alt/" \
-    "${CUSTOM_BASE}/ulauncher-super/"
+    "${CUSTOM_BASE}/rofi-alt/" \
+    "${CUSTOM_BASE}/rofi-super/" \
+    "${CUSTOM_BASE}/monitor-alt/" \
+    "${CUSTOM_BASE}/monitor-super/"
 
   set_custom_binding "blackbox-alt" "Open Blackbox (Alt+Return)" "$TERMINAL_CMD" "<Alt>Return"
   set_custom_binding "blackbox-super" "Open Blackbox (Super+Return)" "$TERMINAL_CMD" "<Super>Return"
@@ -142,8 +144,10 @@ apply_gnome() {
   set_custom_binding "firefox-super" "Open Firefox (Super+W)" "$FIREFOX_CMD" "<Super>w"
   set_custom_binding "nautilus-alt" "Open Nautilus (Alt+E)" "$NAUTILUS_CMD" "<Alt>e"
   set_custom_binding "nautilus-super" "Open Nautilus (Super+E)" "$NAUTILUS_CMD" "<Super>e"
-  set_custom_binding "ulauncher-alt" "Open Ulauncher (Alt+D)" "$ULAUNCHER_CMD" "<Alt>d"
-  set_custom_binding "ulauncher-super" "Open Ulauncher (Super+D)" "$ULAUNCHER_CMD" "<Super>d"
+  set_custom_binding "rofi-alt" "Open Rofi (Alt+D)" "$ROFI_CMD" "<Alt>d"
+  set_custom_binding "monitor-alt" "Monitor (Alt+M)" "$HOME/.local/bin/mon --gnome" "<Alt>m"
+  set_custom_binding "monitor-super" "Monitor (Super+M)" "$HOME/.local/bin/mon --gnome" "<Super>m"
+  set_custom_binding "rofi-super" "Open Rofi (Super+D)" "$ROFI_CMD" "<Super>d"
 
   # dconf mirrors for robustness
   dconf write /org/gnome/desktop/wm/keybindings/close "['<Alt>q', '<Super>q']" 2>/dev/null || true
@@ -153,7 +157,7 @@ apply_gnome() {
   printf '  Terminal     : Alt+Return, Super+Return (%s)\n' "$TERMINAL_CMD"
   printf '  Browser      : Alt+W, Super+W (%s)\n' "$FIREFOX_CMD"
   printf '  File manager : Alt+E, Super+E (%s)\n' "$NAUTILUS_CMD"
-  printf '  Ulauncher    : Alt+D, Super+D\n'
+  printf '  Rofi    : Alt+D, Super+D\n'
 }
 
 # ============================================================
@@ -237,14 +241,18 @@ EOF
   ini_set "$KGLOBAL" "kwin" "Window Close" $'Alt+Q\tSuper+Q,Alt+F4,Close Window'
 
   log "Configuring custom application keybinds..."
-  set_kde_custom_binding "konsole-alt" "Open Black Box (Alt+Return)" "$TERMINAL_CMD" "Alt+Return"
-  set_kde_custom_binding "konsole-super" "Open Black Box (Super+Return)" "$TERMINAL_CMD" "Meta+Return"
+  set_kde_custom_binding "blackbox-alt" "Open Black Box (Alt+Return)" "$TERMINAL_CMD" "Alt+Return"
+  set_kde_custom_binding "blackbox-super" "Open Black Box (Super+Return)" "$TERMINAL_CMD" "Meta+Return"
+  ini_set "$KGLOBAL" "services][konsole-alt.desktop" "_launch" ""
+  ini_set "$KGLOBAL" "services][konsole-super.desktop" "_launch" ""
   set_kde_custom_binding "firefox-alt" "Open Firefox (Alt+W)" "$FIREFOX_CMD" "Alt+W"
   set_kde_custom_binding "firefox-super" "Open Firefox (Super+W)" "$FIREFOX_CMD" "Meta+W"
   set_kde_custom_binding "dolphin-alt" "Open Dolphin (Alt+E)" "$FILEMANAGER_CMD" "Alt+E"
   set_kde_custom_binding "dolphin-super" "Open Dolphin (Super+E)" "$FILEMANAGER_CMD" "Meta+E"
-  set_kde_custom_binding "ulauncher-alt" "Open Ulauncher (Alt+D)" "$ULAUNCHER_CMD" "Alt+D"
-  set_kde_custom_binding "ulauncher-super" "Open Ulauncher (Super+D)" "$ULAUNCHER_CMD" "Meta+D"
+  set_kde_custom_binding "monitor-alt" "Monitor (Alt+M)" "$HOME/.local/bin/mon --kde" "Alt+M"
+  set_kde_custom_binding "monitor-super" "Monitor (Super+M)" "$HOME/.local/bin/mon --kde" "Meta+M"
+  set_kde_custom_binding "rofi-alt" "Open Rofi (Alt+D)" "$ROFI_CMD" "Alt+D"
+  set_kde_custom_binding "rofi-super" "Open Rofi (Super+D)" "$ROFI_CMD" "Meta+D"
 
   # Reconstrói cache de aplicações e recarrega os atalhos
   log "Rebuilding application cache and reloading shortcuts..."
@@ -262,7 +270,7 @@ EOF
   printf '  Terminal     : Alt+Return, Super+Return (%s)\n' "$TERMINAL_CMD"
   printf '  Browser      : Alt+W, Super+W (%s)\n' "$FIREFOX_CMD"
   printf '  File manager : Alt+E, Super+E (%s)\n' "$FILEMANAGER_CMD"
-  printf '  Ulauncher    : Alt+D, Super+D\n'
+  printf '  Rofi    : Alt+D, Super+D\n'
 }
 
 DE="$(detect_de)"
