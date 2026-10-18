@@ -90,7 +90,7 @@ for name in btop "foot client" "foot server" "Hardware Locality lstopo" \
   "Qt V4L2 vídeo capture utility" Rofi "Rofi Theme Selector" Vim xgps xgpsspeed \
   "Utilitário de teste V4L2" Micro Alacritty "Qt6 Settings" "Qt5 Settings" \
   "SchedExt GUI Manager" "Sobre o Xfce" Htop CMake "Btrfs Assistant" "CachyOS Hello" \
-  "Qt Widgets Designer" "Qt Linguist" "Qt D-Bus Viewer" "Qt Assistant"; do
+  "Qt Widgets Designer" "Qt Linguist" "Qt D-Bus Viewer" "Qt Assistant" "Tour" "Ajuda" "Help" "Music" "Música" "Digitalizador de documentos" "Document Scanner" Haruna "KDE Connect" "KDE Connect SMS" "KDE Connect Indicator" Konsole KWrite Kate Shelly "Shelly Notifications" Inkscape Web KCalc Console "KDE Partition Manager"; do
   hide_desktop_by_name "$name"
 done
 
@@ -100,7 +100,7 @@ for f in btop.desktop footclient.desktop foot-server.desktop avahi-discover.desk
   xgps.desktop xgpsspeed.desktop thunar-settings.desktop qt6ct.desktop qt5ct.desktop \
   org.cachyos.scx-manager.desktop xfce4-about.desktop htop.desktop cmake-gui.desktop \
   btrfs-assistant.desktop cachyos-hello.desktop designer.desktop linguist.desktop \
-  qdbusviewer.desktop assistant.desktop; do
+  qdbusviewer.desktop assistant.desktop org.gnome.Tour.desktop org.gnome.Yelp.desktop org.gnome.Music.desktop org.gnome.SimpleScan.desktop org.kde.haruna.desktop org.kde.kdeconnect.app.desktop org.kde.kdeconnect.daemon.desktop org.kde.kdeconnect.handler.desktop org.kde.kdeconnect.nonplasma.desktop org.kde.kdeconnect.sms.desktop org.kde.konsole.desktop org.kde.kate.desktop org.kde.kwrite.desktop com.shellyorg.shelly.desktop com.shellyorg.shelly-notifications.desktop org.inkscape.Inkscape.desktop org.gnome.Epiphany.desktop org.kde.kcalc.desktop org.gnome.Console.desktop org.kde.partitionmanager.desktop; do
   hide_desktop_by_filename "$f"
 done
 

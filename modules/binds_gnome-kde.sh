@@ -162,7 +162,14 @@ apply_gnome() {
 apply_kde() {
   local KGLOBAL="$HOME/.config/kglobalshortcutsrc"
   local APPS_DIR="$HOME/.local/share/applications"
-  local TERMINAL_CMD="konsole"
+  local TERMINAL_CMD="blackbox-terminal"
+  if ! command -v "$TERMINAL_CMD" &>/dev/null; then
+    if command -v blackbox &>/dev/null; then
+      TERMINAL_CMD="blackbox"
+    else
+      warn "Black Box not found — terminal keybind target unavailable"
+    fi
+  fi
   local FILEMANAGER_CMD="dolphin"
 
   command -v "$TERMINAL_CMD" &>/dev/null || warn "konsole not found — keybind will be set anyway"
@@ -230,8 +237,8 @@ EOF
   ini_set "$KGLOBAL" "kwin" "Window Close" $'Alt+Q\tSuper+Q,Alt+F4,Close Window'
 
   log "Configuring custom application keybinds..."
-  set_kde_custom_binding "konsole-alt" "Open Konsole (Alt+Return)" "$TERMINAL_CMD" "Alt+Return"
-  set_kde_custom_binding "konsole-super" "Open Konsole (Super+Return)" "$TERMINAL_CMD" "Meta+Return"
+  set_kde_custom_binding "konsole-alt" "Open Black Box (Alt+Return)" "$TERMINAL_CMD" "Alt+Return"
+  set_kde_custom_binding "konsole-super" "Open Black Box (Super+Return)" "$TERMINAL_CMD" "Meta+Return"
   set_kde_custom_binding "firefox-alt" "Open Firefox (Alt+W)" "$FIREFOX_CMD" "Alt+W"
   set_kde_custom_binding "firefox-super" "Open Firefox (Super+W)" "$FIREFOX_CMD" "Meta+W"
   set_kde_custom_binding "dolphin-alt" "Open Dolphin (Alt+E)" "$FILEMANAGER_CMD" "Alt+E"
