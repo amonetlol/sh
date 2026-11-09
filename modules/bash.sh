@@ -54,8 +54,6 @@ dot_install_home_files() {
   local src_dir="$DOT_CACHE/$rel_src"
   local file src dest
 
-  dot_ensure_repo
-
   if [[ ! -d "$src_dir" ]]; then
     fail "Origem não encontrada: $src_dir"
   fi
@@ -78,8 +76,6 @@ dot_install_bin() {
   local src="$DOT_CACHE/dotfiles/bin/.bin"
   local dest="$HOME/.bin"
 
-  dot_ensure_repo
-
   if [[ ! -d "$src" ]]; then
     fail "Origem não encontrada: $src"
   fi
@@ -93,141 +89,21 @@ dot_install_bin() {
   ok "Instalado: $dest ($(find "$dest" -maxdepth 1 -type f | wc -l) scripts)"
 }
 
-dot_install_home_files "dotfiles/bash" \
-  ".aliases" \
-  ".aliases-arch" \
-  ".aliases-debian" \
-  ".aliases-fedora" \
-  ".aliases-nixos" \
-  ".aliases-opensuse" \
-  ".aliases-solus" \
-  ".bash_profile" \
-  ".functions"
+dot_ensure_repo
 
-# .bashrc vendido (starship nord ativo) — embutido para script standalone
-BASHRC_DEST="$HOME/.bashrc"
-dot_backup_path "$BASHRC_DEST"
-cat > "$BASHRC_DEST" <<'BASHRC_EOF'
-# ~/.bashrc
-# Configuração principal do Bash
-
-# ============================================================
-# SOMENTE SHELL INTERATIVO
-# ============================================================
- [[ $- != *i* ]] && return
-
-
-# ============================================================
-# BASH COMPLETION
-# Pacote: bash-completion
-# ============================================================
-if [[ -f /usr/share/bash-completion/bash_completion ]]; then
-    . /usr/share/bash-completion/bash_completion
-fi
-
-
-# ============================================================
-# PATH
-# ============================================================
-case ":$PATH:" in
-    *":$HOME/.bin:"*) ;;
-    *) export PATH="$HOME/.bin:$PATH" ;;
-esac
-
-case ":$PATH:" in
-    *":$HOME/.local/bin:"*) ;;
-    *) export PATH="$HOME/.local/bin:$PATH" ;;
-esac
-# ============================================================
-# FUNÇÕES
-# ============================================================
-
-# Carrega funções
-[[ -f "$HOME/.functions" ]] && . "$HOME/.functions"
-
-
-# Detecta distro depois de carregar as funções
-if declare -F detect_distro >/dev/null 2>&1; then
-    DISTRO="$(detect_distro)"
-else
-    DISTRO="unknown"
-fi
-
-
-# ============================================================
-# ALIASES
-# ============================================================
-
-# Aliases comuns
-[[ -f "$HOME/.aliases" ]] && . "$HOME/.aliases"
-[[ -f "$HOME/.aliases.sh" ]] && . "$HOME/.aliases.sh"
-
-# Aliases especifícos da distro
+# Usa a mesma deteccao carregada pelo .bashrc, antes de instalar os arquivos.
+FUNCTIONS_SRC="$DOT_CACHE/dotfiles/bash/.functions"
+[[ -f "$FUNCTIONS_SRC" ]] || fail "Arquivo nao encontrado: $FUNCTIONS_SRC"
+source <(sed 's/\r$//' "$FUNCTIONS_SRC")
+DISTRO="$(detect_distro)"
+files=(".bashrc" ".aliases" ".functions" ".bash_profile")
 case "$DISTRO" in
-    arch)
-        [[ -f "$HOME/.aliases-arch" ]] && . "$HOME/.aliases-arch"
-        ;;
-    debian)
-        [[ -f "$HOME/.aliases-debian" ]] && . "$HOME/.aliases-debian"
-        ;;
-    nixos)
-        [[ -f "$HOME/.aliases-nixos" ]] && . "$HOME/.aliases-nixos"
-        ;;
-    fedora)
-        [[ -f "$HOME/.aliases-fedora" ]] && . "$HOME/.aliases-fedora"
-        ;;
-    opensuse)
-        [[ -f "$HOME/.aliases-opensuse" ]] && . "$HOME/.aliases-opensuse"
-        ;;
-    solus)
-        [[ -f "$HOME/.aliases-solus" ]] && . "$HOME/.aliases-solus"
-        ;;
-    unknown)
-        # Descomente para debug:
-        # echo "[AVISO] Distro não reconhecida."
-        ;;
+  arch|debian|fedora|gentoo|nixos|opensuse|openmandriva|slackware|solus|void)
+    files+=(".aliases-$DISTRO")
+    log "Distro detectada: $DISTRO"
+    ;;
+  *) warn "Distro nao reconhecida; nenhum arquivo de aliases especifico sera instalado." ;;
 esac
 
-# Debug opcional
-# echo "[INFO] Distro detectada: $DISTRO"
-
-# ============================================================
-# HISTÓRICO
-# ============================================================
-export HISTFILESIZE=10000
-export HISTSIZE=10000
-export HISTTIMEFORMAT="%F %T "
-export HISTCONTROL=erasedups:ignoredups:ignorespace
-
-shopt -s histappend
-shopt -s checkwinsize
-
-# Salva histórico da sessão e lê histórico da sessão novo de outros terminais
-PROMPT_COMMAND="history -a; history -n${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
-
-
-# ============================================================
-# PROMPT / FERRAMENTAS INTERATIVAS
-# ============================================================
-
-# ====================== STARSHIP CONFIG ======================
-
-# Escolha qual configuração do Starship usar (descomente apenas uma)
-
-# export STARSHIP_CONFIG="$HOME/.config/starship.toml"              # Padrão / Matugen
-# export STARSHIP_CONFIG="$HOME/.config/starship-tokyo-night.toml" # Tokyo Night
-export STARSHIP_CONFIG="$HOME/.config/starship-nord.toml"           # Nord
-
-# ============================================================
-
-if command -v starship >/dev/null 2>&1; then
-    eval "$(starship init bash)"
-fi
-
-if command -v zoxide >/dev/null 2>&1; then
-    eval "$(zoxide init bash)"
-fi
-BASHRC_EOF
-ok "Copiado: $BASHRC_DEST (vendido — starship nord ativo)"
-
+dot_install_home_files "dotfiles/bash" "${files[@]}"
 dot_install_bin
