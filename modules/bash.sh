@@ -98,7 +98,7 @@ source <(sed 's/\r$//' "$FUNCTIONS_SRC")
 DISTRO="$(detect_distro)"
 files=(".bashrc" ".aliases" ".functions" ".bash_profile")
 case "$DISTRO" in
-  arch|debian|fedora|fedora-silverblue|mocaccino|gentoo|nixos|opensuse|openmandriva|slackware|salix|solus|void|freebsd|kali|antix)
+  arch|debian|fedora|fedora-silverblue|mocaccino|gentoo|calculate|nixos|opensuse|openmandriva|slackware|salix|solus|void|freebsd|kali|antix)
     files+=(".aliases-$DISTRO")
     log "Distro detectada: $DISTRO"
     ;;
