@@ -132,6 +132,7 @@ install_group "base" \
   nano \
   vim \
   neovim \
+  micro \
   bash-completion \
   less \
   wl-clipboard \
