@@ -67,4 +67,4 @@ for hub in ssh-hub term-hub; do
   ok "$hub instalado; campos em $target/ssh.conf"
 done
 
-ok 'Use ssh-hub ou term-hub em um terminal. Novas instalacoes comecam sem credenciais.'
+ok 'Use ssh-hub ou term-hub em um terminal. Para acompanhar os logs: term-hub --ff (atalho Ctrl+b f). Novas instalacoes comecam sem credenciais.'
