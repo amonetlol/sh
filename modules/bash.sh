@@ -102,7 +102,14 @@ case "$DISTRO" in
     files+=(".aliases-$DISTRO")
     log "Distro detectada: $DISTRO"
     ;;
-  *) warn "Distro nao reconhecida; nenhum arquivo de aliases especifico sera instalado." ;;
+  rocky)
+    files+=(".aliases-distro")
+    log "Distro detectada: $DISTRO (aliases genericos .aliases-distro)"
+    ;;
+  *)
+    files+=(".aliases-distro")
+    warn "Distro nao reconhecida ($DISTRO); instalando aliases genericos (.aliases-distro)."
+    ;;
 esac
 
 dot_install_home_files "dotfiles/bash" "${files[@]}"
