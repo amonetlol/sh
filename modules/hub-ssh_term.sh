@@ -67,4 +67,22 @@ for hub in ssh-hub term-hub; do
   ok "$hub instalado; campos em $target/ssh.conf"
 done
 
-ok 'Use ssh-hub ou term-hub em um terminal. Para acompanhar os logs: term-hub --ff (atalho Ctrl+b f). Novas instalacoes comecam sem credenciais.'
+
+# Disponibiliza o preparador das duas sessoes junto dos launchers.
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || true)"
+ff_script="$here/tmux-attach-ff_ffd.sh"
+if [[ -f "$ff_script" ]]; then
+  install -m 755 "$ff_script" "$HOME/.local/bin/tmux-attach-ff_ffd.sh"
+else
+  command -v curl >/dev/null 2>&1 || fail 'curl ausente para baixar o preparador de logs.'
+  temp_ff="$(mktemp)"
+  if ! curl -fsSL --retry 3 https://raw.githubusercontent.com/amonetlol/sh/main/modules/tmux-attach-ff_ffd.sh -o "$temp_ff"; then
+    rm -f -- "$temp_ff"
+    fail 'Nao foi possivel baixar o preparador de logs.'
+  fi
+  install -m 755 "$temp_ff" "$HOME/.local/bin/tmux-attach-ff_ffd.sh"
+  rm -f -- "$temp_ff"
+fi
+ok 'Preparador instalado: ~/.local/bin/tmux-attach-ff_ffd.sh'
+
+ok 'Use term-hub --ff ou Ctrl+b f para logs gerais; Ctrl+b F acompanha logs por distro. Para criar ff e ffd: tmux-attach-ff_ffd.sh DISTRO1 DISTRO2. Novas instalacoes comecam sem credenciais.'
