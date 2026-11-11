@@ -17,6 +17,27 @@ for dependency in git python3 tmux ssh; do
 done
 command -v nvim >/dev/null 2>&1 || warn 'Neovim nao encontrado; o atalho e de edicao requer nvim.'
 
+# O banco minimo de terminfo do openSUSE pode nao incluir tmux-256color.
+if command -v zypper >/dev/null 2>&1 &&
+   { ! command -v infocmp >/dev/null 2>&1 || ! infocmp tmux-256color >/dev/null 2>&1; }; then
+  sudo zypper --non-interactive install --no-recommends terminfo ncurses-utils
+fi
+if command -v xbps-install >/dev/null 2>&1 &&
+   { ! command -v infocmp >/dev/null 2>&1 || ! infocmp tmux-256color >/dev/null 2>&1; }; then
+  sudo xbps-install -Sy ncurses-term
+fi
+
+# openSUSE distribui curses separadamente para cada versao do Python.
+if ! python3 -c 'import curses' >/dev/null 2>&1; then
+  if command -v zypper >/dev/null 2>&1; then
+    python_version="$(python3 -c 'import sys; print(f"{sys.version_info.major}{sys.version_info.minor}")')"
+    sudo zypper --non-interactive install --no-recommends "python${python_version}-curses"
+  else
+    fail 'O modulo curses do Python esta ausente; instale-o antes de usar term-hub.'
+  fi
+  python3 -c 'import curses' >/dev/null 2>&1 || fail 'Nao foi possivel carregar curses no Python.'
+fi
+
 if [[ -d "$DOT_CACHE/.git" ]]; then
   log "Atualizando cache dot: $DOT_CACHE"
   git -C "$DOT_CACHE" pull --ff-only || warn 'git pull falhou; usando cache local.'
@@ -33,6 +54,7 @@ for hub in ssh-hub term-hub; do
     [[ -f "$source_bin/$file" ]] || fail "Arquivo ausente no repo dot: $source_bin/$file"
   done
 done
+[[ -f "$DOT_CACHE/dotfiles/term-hub/.local/bin/term-hub.d/log_picker.py" ]] || fail 'Seletor de logs do term-hub ausente no repo dot.'
 
 mkdir -p "$HOME/.local/bin"
 stamp="$(date +%Y%m%d-%H%M%S)-$$"
@@ -85,4 +107,4 @@ else
 fi
 ok 'Preparador instalado: ~/.local/bin/tmux-attach-ff_ffd.sh'
 
-ok 'Use term-hub --ff ou Ctrl+b f para logs gerais; Ctrl+b F acompanha logs por distro. Para criar ff e ffd: tmux-attach-ff_ffd.sh DISTRO1 DISTRO2. Novas instalacoes comecam sem credenciais.'
+ok 'Use Ctrl+b l para selecionar logs, Ctrl+b N para novo grupo e Ctrl+b Q para encerrar o servidor dedicado. Para criar ff e ffd: tmux-attach-ff_ffd.sh DISTRO1 DISTRO2.'
