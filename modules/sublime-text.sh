@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# sublime-text — Sublime Text 4, tema Catppuccin Frappe e fonte CodeNewRoman
+# sublime-text — Sublime Text 4, tema Catppuccin Frappe, fonte CodeNewRoman e menus em pt-BR (LocalizedMenu)
 # Arch: repositório oficial stable. NixOS: o pacote sublime4 vem do rice nixos;
 # este módulo ainda aplica tema e fonte.
 # Uso: bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/sublime-text.sh)
@@ -7,6 +7,7 @@ set -euo pipefail
 
 DOT_REPO="${DOT_REPO:-https://github.com/amonetlol/dot.git}"
 CATPPUCCIN_REPO="${CATPPUCCIN_REPO:-https://github.com/catppuccin/sublime-text.git}"
+LOCALIZED_MENU_REPO="${LOCALIZED_MENU_REPO:-https://github.com/OSPanel/LocalizedMenu.git}"
 FONT_FAMILY="CodeNewRoman Nerd Font"
 SUBLIME_PACKAGES="${XDG_CONFIG_HOME:-$HOME/.config}/sublime-text/Packages"
 
@@ -97,6 +98,21 @@ install_catppuccin() {
   ok "Tema Catppuccin em $dest"
 }
 
+install_localized_menu() {
+  mkdir -p "$SUBLIME_PACKAGES/User"
+  local dest="$SUBLIME_PACKAGES/LocalizedMenu"
+  if [[ -d $dest/.git ]]; then
+    log "Atualizando LocalizedMenu"
+    git -C "$dest" pull --ff-only || warn "git pull do LocalizedMenu falhou — usando a cópia local"
+  else
+    rm -rf "$dest"
+    git clone --depth 1 "$LOCALIZED_MENU_REPO" "$dest"
+  fi
+  [[ -f "$dest/locale/pt_BR/menu.json" ]] || fail "LocalizedMenu sem tradução pt_BR."
+  printf '{\n    "locale": "pt_BR",\n    "findSimilarVer": true\n}\n' > "$SUBLIME_PACKAGES/User/LocalizedMenu.sublime-settings"
+  ok "Menus em pt-BR (LocalizedMenu). Reabra o Sublime para aplicar."
+}
+
 write_preferences() {
   mkdir -p "$SUBLIME_PACKAGES/User"
   python3 - "$SUBLIME_PACKAGES/User/Preferences.sublime-settings" "$FONT_FAMILY" <<'PY'
@@ -138,5 +154,6 @@ fi
 
 install_codenewroman
 install_catppuccin
+install_localized_menu
 write_preferences
-ok "Sublime Text 4 com Catppuccin Frappe e CodeNewRoman. Reabra o editor se ele já estava aberto."
+ok "Sublime Text 4 com Catppuccin Frappe, CodeNewRoman e menus pt-BR. Reabra o editor se ele já estava aberto."
