@@ -69,6 +69,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/fa
 # setup-nvim — config neovim (repo amonetlol/nvim)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/setup-nvim.sh)
 
+# lvim — StratVIM ajustado (repo amonetlol/lvim) como comando lvim
+bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/lvim.sh)
+
 # snapper — ajusta limites de snapshots do snapper (SNAPPER_LIMIT, padrão 6)
 bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/Sistema/snapper.sh)
 
