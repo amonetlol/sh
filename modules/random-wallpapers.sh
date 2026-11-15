@@ -92,7 +92,7 @@ fi
 
 wallpaper_dir="$HOME/Imagens/wallpapers"
 [[ -d "$wallpaper_dir" ]] || exit 0
-wallpaper=$(find "$wallpaper_dir" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | shuf -n 1)
+wallpaper=$(find -L "$wallpaper_dir" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | shuf -n 1)
 [[ -n "$wallpaper" ]] || exit 0
 de="${XDG_CURRENT_DESKTOP:-${XDG_SESSION_DESKTOP:-}}"
 

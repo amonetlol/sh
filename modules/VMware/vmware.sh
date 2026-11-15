@@ -40,6 +40,7 @@ detect_distro_base() {
       arch*|*:arch*|cachyos*|manjaro*|endeavouros*|garuda*) echo "arch"; return 0 ;;
       fedora*|*:fedora*|rhel*|centos*|rocky*|alma*) echo "fedora"; return 0 ;;
       ubuntu*|debian*|pop*|linuxmint*|zorin*|elementary*|*:ubuntu*|*:debian*) echo "ubuntu"; return 0 ;;
+      opensuse*|suse*|*:opensuse*|*:suse*) echo "opensuse"; return 0 ;;
     esac
   fi
   [[ -f /etc/debian_version ]] && { echo "ubuntu"; return 0; }
@@ -73,6 +74,12 @@ case "$BASE" in
   fedora)
     if ! sudo dnf install -y open-vm-tools open-vm-tools-desktop; then
       warn "open-vm-tools falhou — continuando sem vmtoolsd"
+      exit 0
+    fi
+    ;;
+  opensuse)
+    if ! sudo zypper --non-interactive install --no-recommends open-vm-tools open-vm-tools-desktop; then
+      warn "open-vm-tools falhou; continuando sem vmtoolsd"
       exit 0
     fi
     ;;
