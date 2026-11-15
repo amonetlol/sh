@@ -174,15 +174,7 @@ install_group "build/dev" \
 install_group "nvim/dev stack" \
   nodejs \
   npm \
-  lua51 \
-  luarocks \
-  python \
-  python-pip \
-  python-pynvim \
-  python-pipenv \
-  tree-sitter-cli \
-  python-virtualenv \
-  prettier
+  tree-sitter-cli
 
 # ---------- Fontes / sistema / desktop ----------
 install_group "fontes/sistema" \

@@ -100,9 +100,7 @@ if is_arch_based; then
   if command -v yay >/dev/null 2>&1; then
     yay -S --needed --noconfirm \
       nodejs npm \
-      lua51 luarocks \
-      python python-pip python-pynvim python-pipenv python-virtualenv \
-      tree-sitter-cli prettier \
+      tree-sitter-cli \
       || warn "Falha ao instalar pacotes com yay (verifique manualmente)"
   else
     warn "yay não encontrado — instale os pacotes manualmente se necessário"
