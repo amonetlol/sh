@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # random-wallpapers — instala ~/.bin/random-wallpaper.sh e o timer systemd do usuário
-# Standalone: script de wallpaper e units systemd embutidos (a cada 5 minutos).
+# Standalone: script de wallpaper e units systemd embutidos (a cada 90 segundos).
 # Uso: bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/random-wallpapers.sh)
 set -euo pipefail
 
@@ -156,11 +156,11 @@ sed -i 's/\r$//' "$DEST_SERVICE"
 # ---------- timer (embutido) ----------
 cat > "$DEST_TIMER" <<'TIMER_EOF'
 [Unit]
-Description=Timer wallpaper aleatório (5 minutos)
+Description=Timer wallpaper aleatório (90 segundos)
 
 [Timer]
-OnBootSec=2min
-OnUnitActiveSec=5min
+OnBootSec=90s
+OnUnitActiveSec=90s
 
 [Install]
 WantedBy=timers.target
