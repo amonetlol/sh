@@ -69,11 +69,12 @@ if ! $T has-session -t "$S" 2>/dev/null; then
   $T set-option -g status-style 'bg=#292c3c,fg=#a5adce'
   $T set-option -g status-left-length 100
   # letras clicáveis: cada uma é um range; o clique vira "Ctrl+b <letra>" (send-keys -K na tabela prefix)
-  $T set-option -g status-left '#[fg=#e5c890,bold] tlogs #[fg=#a5adce]Layouts: #[fg=#8caaee]#[range=user|z]z#[norange] · #[range=user|h]h#[norange] · #[range=user|v]v#[norange] · #[range=user|eq]=#[norange] · #[range=user|t]t#[norange] · #[range=user|T]T#[norange] · #[range=user|m]m#[norange] #[fg=#737994][#{@mode}] #[fg=#a6d189,bold]#[range=user|plus] + #[norange]#[fg=#e78284,bold]#[range=user|minus] - #[norange]#[fg=#737994,nobold]· #[range=user|help]? ajuda#[norange] #[default]'
-  # clique: letras = Ctrl+b <letra>; + = novo painel (shell na pasta do painel ativo); - = fecha o painel ativo (o painel principal do PC, índice 0, não fecha)
+  $T set-option -g status-left '#[fg=#e5c890,bold] tlogs #[fg=#a5adce]Layouts: #[fg=#8caaee]#[range=user|z]z#[norange] · #[range=user|h]h#[norange] · #[range=user|v]v#[norange] · #[range=user|eq]=#[norange] · #[range=user|t]t#[norange] · #[range=user|T]T#[norange] · #[range=user|m]m#[norange] · #[range=user|swp]swp#[norange] #[fg=#737994][#{@mode}] #[fg=#a6d189,bold]#[range=user|plus] + #[norange]#[fg=#e78284,bold]#[range=user|minus] - #[norange]#[fg=#737994,nobold]· #[range=user|help]? ajuda#[norange] #[default]'
+  # clique: letras = Ctrl+b <letra>; swp = próximo layout (h → v → = → T → m → h); + = novo painel (shell na pasta do painel ativo); - = fecha o painel ativo (o painel principal do PC, índice 0, não fecha)
   $T bind-key -n MouseDown1Status run-shell -b "k='#{mouse_status_range}'; case \$k in
       plus)  $T split-window -t '#{pane_id}' -c '#{pane_current_path}'; $T select-layout -t '#{window_id}' tiled; exit 0;;
       minus) [ '#{pane_index}' = 0 ] && { $T display-message -c '#{client_name}' 'o painel principal do PC não fecha'; exit 0; }; $T kill-pane -t '#{pane_id}'; exit 0;;
+      swp) i=\$(( (\$($T show-options -gqv @swp) + 1) % 5 )); $T set-option -g @swp \$i; set -- h v = T m; shift \$i; k=\$1;;
       eq) k='=';; help) k='?';; z|h|v|t|T|m) ;; *) exit 0;; esac
     $T switch-client -c '#{client_name}' -T prefix; $T send-keys -c '#{client_name}' -K \"\$k\""
   $T set-option -g status-right-length 200
