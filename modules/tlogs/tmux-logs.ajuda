@@ -21,6 +21,8 @@
    :        linha de comando do tmux
 
   ── tmux padrão: painéis ─────────────────────────────────────────────────
+   %        nova pane ao lado (divide na vertical)
+   "        nova pane embaixo (divide na horizontal)
    setas    vai para o painel na direção     o    próximo painel
    x        fecha o painel
    ;        painel anterior                  q    (tmux padrão: números dos painéis — aqui é "fecha o tlogs")

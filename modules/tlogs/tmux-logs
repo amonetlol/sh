@@ -65,6 +65,8 @@ if ! $T has-session -t "$S" 2>/dev/null; then
   $T bind-key m select-layout -t "$S:logs" main-vertical '\;' resize-pane -t "$S:logs.0" -x 65% '\;' set-option -w -t "$S:logs" @mode Vertical
   $T bind-key t if-shell -F '#{window_zoomed_flag}' 'refresh-client' 'resize-pane -Z' '\;' set-option -w @mode Tab
   $T bind-key Tab select-pane -Z -t :.+
+  $T bind-key % split-window -h -c '#{pane_current_path}'     # nova pane ao lado (divide na vertical)
+  $T bind-key '"' split-window -v -c '#{pane_current_path}'   # nova pane embaixo (divide na horizontal)
   $T bind-key q "kill-server"
   $T bind-key ? display-popup -w 90 -h 44 -T ' tlogs: atalhos ' -E "less -R -P'q fecha' $HOME/.local/bin/tmux-logs.ajuda"
   $T select-pane -t "$S:logs.0"
