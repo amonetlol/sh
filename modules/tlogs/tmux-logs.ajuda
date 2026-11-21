@@ -13,7 +13,7 @@
    ?        esta ajuda
    clique   as letras da barra (z h v = t T m e "? ajuda") também ativam o layout
             swp alterna os layouts a cada clique (h → v → = → T → m)
-            Suspender (amarelo, à direita) sai do tlogs sem encerrar o tmux · Fechar (vermelho) encerra o tmux
+            󰒲 (amarelo, à direita) suspende: sai do tlogs sem encerrar o tmux · 󰅖 (vermelho) fecha: encerra o tmux
             + abre um painel novo (shell) · - fecha o painel ativo (o principal do PC não fecha)
    q        fecha o tlogs (encerra o tmux dele; os logs continuam nos arquivos)
    painéis  PC (ssh pc) sempre · Void só durante instalação local (some após 3 min parado)

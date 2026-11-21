@@ -81,7 +81,7 @@ if ! $T has-session -t "$S" 2>/dev/null; then
     $T switch-client -c '#{client_name}' -T prefix; $T send-keys -c '#{client_name}' -K \"\$k\""
   $T set-option -g status-right-length 200
   # botões à direita: Suspender (amarelo) = sai do tlogs sem encerrar o tmux · Fechar (vermelho) = mata o tmux do tlogs
-  $T set-option -g status-right "#(cat $ST 2>/dev/null) #[bg=#e5c890,fg=#232634,bold]#[range=user|suspend] 󰒲 Suspender #[norange]#[default] #[bg=#e78284,fg=#232634,bold]#[range=user|close] 󰅖 Fechar #[norange]#[default]"
+  $T set-option -g status-right "#(cat $ST 2>/dev/null) #[bg=#e5c890,fg=#232634,bold]#[range=user|suspend] 󰒲 #[norange]#[default] #[bg=#e78284,fg=#232634,bold]#[range=user|close] 󰅖 #[norange]#[default]"
   $T set-option -g window-status-format ''
   $T set-option -g window-status-current-format ''
   # layouts (prefixo Ctrl+b); @mode aparece na barra
