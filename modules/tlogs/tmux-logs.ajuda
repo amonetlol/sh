@@ -11,6 +11,7 @@
    m        Multi: PC 65% à esquerda, Void à direita
    Tab      próximo painel (mantém o zoom no modo Tab)
    ?        esta ajuda
+   clique   as letras da barra (z h v = t T m e "? ajuda") também ativam o layout
    q        fecha o tlogs (encerra o tmux dele; os logs continuam nos arquivos)
    painéis  PC (ssh pc) sempre · Void só durante instalação local (some após 3 min parado)
             + 1 painel por trabalho em paralelo no PC (/tmp/ff-install-<nome>.log): abre sozinho, some após 3 min parado

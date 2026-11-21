@@ -68,7 +68,9 @@ if ! $T has-session -t "$S" 2>/dev/null; then
   $T set-option -g status-interval 2
   $T set-option -g status-style 'bg=#292c3c,fg=#a5adce'
   $T set-option -g status-left-length 100
-  $T set-option -g status-left '#[fg=#e5c890,bold] tlogs #[fg=#a5adce]Layouts: #[fg=#8caaee]z · h · v · = · t · T · m #[fg=#737994][#{@mode}] · ? ajuda #[default]'
+  # letras clicáveis: cada uma é um range; o clique vira "Ctrl+b <letra>" (send-keys -K na tabela prefix)
+  $T set-option -g status-left '#[fg=#e5c890,bold] tlogs #[fg=#a5adce]Layouts: #[fg=#8caaee]#[range=user|z]z#[norange] · #[range=user|h]h#[norange] · #[range=user|v]v#[norange] · #[range=user|eq]=#[norange] · #[range=user|t]t#[norange] · #[range=user|T]T#[norange] · #[range=user|m]m#[norange] #[fg=#737994][#{@mode}] · #[range=user|help]? ajuda#[norange] #[default]'
+  $T bind-key -n MouseDown1Status run-shell -b "k='#{mouse_status_range}'; case \$k in eq) k='=';; help) k='?';; z|h|v|t|T|m) ;; *) exit 0;; esac; $T switch-client -c '#{client_name}' -T prefix; $T send-keys -c '#{client_name}' -K \"\$k\""
   $T set-option -g status-right-length 200
   $T set-option -g status-right "#(cat $ST 2>/dev/null) "
   $T set-option -g window-status-format ''
