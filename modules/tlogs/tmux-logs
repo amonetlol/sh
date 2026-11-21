@@ -30,22 +30,40 @@ done'
 VIGIA='F=/tmp/ff-install.log; touch $F; last=$(stat -c %s $F); idle=0
 while :; do sleep 2
   cur=$(stat -c %s $F 2>/dev/null || echo 0)
-  n=$(tmux -L tlogs display-message -p -t logs:logs "#{window_panes}" 2>/dev/null) || exit 0
+  loc=$(tmux -L tlogs list-panes -t logs:logs -F "#{pane_id} #{pane_title}" 2>/dev/null) || exit 0
+  loc=$(echo "$loc" | awk "\$2==\"Void-local\"{print \$1; exit}")
   if [ "$cur" != "$last" ]; then last=$cur; idle=0
-    [ "$n" = 1 ] && tmux -L tlogs split-window -d -t logs:logs.0 -v -l 30% "tail -n 20 -F $F"
+    [ -z "$loc" ] && { p=$(tmux -L tlogs split-window -d -P -F "#{pane_id}" -t logs:logs.0 -v -l 30% "tail -n 20 -F $F"); tmux -L tlogs select-pane -t "$p" -T Void-local; }
   else idle=$((idle+2))
-    [ "$n" -gt 1 ] && [ $idle -ge 180 ] && tmux -L tlogs kill-pane -t logs:logs.1
+    [ -n "$loc" ] && [ $idle -ge 180 ] && tmux -L tlogs kill-pane -t "$loc"
   fi
+done'
+# vigia do PC: cada trabalho em paralelo grava em /tmp/ff-install-<nome>.log no PC; abre um painel por arquivo
+# ativo (mexido nos últimos 3 min) e fecha o painel quando o arquivo fica 3 min parado
+VIGIAPC='while :; do sleep 4
+  tmux -L tlogs has-session -t logs 2>/dev/null || exit 0
+  ativos=$(ssh '"$SSHO"' '"$H"' "find /tmp -maxdepth 1 -name \"ff-install-*.log\" -mmin -3 2>/dev/null" 2>/dev/null) || continue
+  for f in $ativos; do t="PC: ${f##*/}"
+    tmux -L tlogs list-panes -t logs:logs -F "#{pane_title}" | grep -qxF "$t" && continue
+    p=$(tmux -L tlogs split-window -d -P -F "#{pane_id}" -t logs:logs.0 -v -l 35% "ssh '"$SSHO"' '"$H"' \"tail -n 40 -F $f\"; sleep 2")
+    tmux -L tlogs select-pane -t "$p" -T "$t"
+    tmux -L tlogs select-layout -t logs:logs tiled
+  done
+  tmux -L tlogs list-panes -t logs:logs -F "#{pane_id} #{pane_title}" | while read -r id t; do
+    case "$t" in "PC: ff-install-"*) echo "$ativos" | grep -qxF "/tmp/${t#PC: }" || tmux -L tlogs kill-pane -t "$id";; esac
+  done
 done'
 
 if ! $T has-session -t "$S" 2>/dev/null; then
   $T -f /dev/null new-session -d -s "$S" -n logs -x 200 -y 50 "sh -c '$PC'"
   $T new-window -d -t "$S:" -n stat "sh -c '$STAT'"          # janela oculta que alimenta a barra
   $T new-window -d -t "$S:" -n vigia "sh -c '$VIGIA'"        # janela oculta: painel do Void só durante instalação local
+  $T new-window -d -t "$S:" -n vigiapc "sh -c '$VIGIAPC'"    # janela oculta: um painel por /tmp/ff-install-<nome>.log ativo no PC
   $T set-option -g mouse on
   $T set-option -g history-limit 50000
   $T set-option -g pane-border-status top
-  $T set-option -g pane-border-format " #{?#{==:#{pane_index},0},remoto (ssh $H),local $(hostname) (instalando)} — /tmp/ff-install.log "
+  $T set-option -g allow-rename off
+  $T set-option -g pane-border-format " #{?#{m:PC: ff-install-*,#{pane_title}},#{pane_title} (paralelo),#{?#{==:#{pane_title},Void-local},local $(hostname) (instalando) — /tmp/ff-install.log,remoto (ssh $H) — /tmp/ff-install.log}} "
   $T set-option -g pane-active-border-style 'fg=#8caaee'
   $T set-option -g status-interval 2
   $T set-option -g status-style 'bg=#292c3c,fg=#a5adce'

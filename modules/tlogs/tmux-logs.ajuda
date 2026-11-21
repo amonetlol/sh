@@ -13,6 +13,7 @@
    ?        esta ajuda
    q        fecha o tlogs (encerra o tmux dele; os logs continuam nos arquivos)
    painéis  PC (ssh pc) sempre · Void só durante instalação local (some após 3 min parado)
+            + 1 painel por trabalho em paralelo no PC (/tmp/ff-install-<nome>.log): abre sozinho, some após 3 min parado
    barra    direita = term-hub status do PC (CPU RAM SWP / rede load uptime), a cada 2 s
 
   ── tmux padrão: sessão ──────────────────────────────────────────────────
@@ -34,7 +35,7 @@
   ── tmux padrão: janelas ─────────────────────────────────────────────────
    c        nova janela      n / p   próxima / anterior      w   escolher janela
    ,        renomeia         &       fecha a janela
-   (janelas ocultas "stat" = barra do PC e "vigia" = painel do Void sob demanda — não feche)
+   (janelas ocultas "stat" = barra do PC, "vigia" = painel do Void e "vigiapc" = painéis paralelos do PC — não feche)
 
   ── rolar e copiar ───────────────────────────────────────────────────────
    [        modo cópia (setas, PgUp/PgDn, g/G início/fim, / ? busca, n/N próximo, q sai)
