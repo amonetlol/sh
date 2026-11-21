@@ -1,0 +1,41 @@
+  tlogs — atalhos            (prefixo: Ctrl+b, soltar, depois a tecla)   ·   q fecha esta ajuda
+
+  ── tlogs (personalizados) ───────────────────────────────────────────────
+   Layouts (o modo atual aparece na barra entre [ ]):
+   z        zoom no painel ativo (liga/desliga)
+   h        horizontal: lado a lado
+   v        vertical: empilhado, PC 70% em cima            (padrão)
+   =        metade / metade (empilhado)
+   t        Tab: um painel por vez em tela cheia — Tab alterna
+   T        Tiling: grade
+   m        Multi: PC 65% à esquerda, Void à direita
+   Tab      próximo painel (mantém o zoom no modo Tab)
+   ?        esta ajuda
+   q        fecha o tlogs (encerra o tmux dele; os logs continuam nos arquivos)
+   painéis  PC (ssh pc) sempre · Void só durante instalação local (some após 3 min parado)
+   barra    direita = term-hub status do PC (CPU RAM SWP / rede load uptime), a cada 2 s
+
+  ── tmux padrão: sessão ──────────────────────────────────────────────────
+   d        sai sem fechar (volte com: tlogs)
+   s        lista sessões        $   renomeia a sessão
+   :        linha de comando do tmux
+
+  ── tmux padrão: painéis ─────────────────────────────────────────────────
+   setas    vai para o painel na direção     o    próximo painel
+   x        fecha o painel
+   ;        painel anterior                  q    (tmux padrão: números dos painéis — aqui é "fecha o tlogs")
+   Ctrl+setas   redimensiona 1 linha/coluna   Alt+setas   redimensiona 5
+   Espaço   próximo layout                   Alt+1..7   layouts prontos (lado, pilha, grade...)
+   {  }     troca o painel com o anterior / próximo
+   !        transforma o painel em janela
+
+  ── tmux padrão: janelas ─────────────────────────────────────────────────
+   c        nova janela      n / p   próxima / anterior      w   escolher janela
+   ,        renomeia         &       fecha a janela
+   (janelas ocultas "stat" = barra do PC e "vigia" = painel do Void sob demanda — não feche)
+
+  ── rolar e copiar ───────────────────────────────────────────────────────
+   [        modo cópia (setas, PgUp/PgDn, g/G início/fim, / ? busca, n/N próximo, q sai)
+   ]        cola o último trecho copiado
+   mouse    roda = rolar · clique = escolhe o painel · arrastar a borda = redimensiona
+            arrastar texto = copiar (Shift+arrastar = seleção do terminal)
