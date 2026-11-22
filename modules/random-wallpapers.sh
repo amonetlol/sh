@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# random-wallpapers — instala ~/.bin/random-wallpaper.sh e o timer systemd do usuário
-# Standalone: script de wallpaper e units systemd embutidos (a cada 90 segundos).
+# random-wallpapers — instala ~/.bin/random-wallpaper.sh e o agendamento a cada 90 segundos:
+#   systemd -> timer do usuário (~/.config/systemd/user)
+#   runit (Void) -> serviço runit do usuário (/etc/sv/runsvdir-$USER + ~/service/random-wallpaper)
+#   outros (sem systemd/runit, ex. Slackware) -> laço em ~/.config/autostart (XDG)
 # Uso: bash <(curl -fsSL https://raw.githubusercontent.com/amonetlol/sh/main/modules/random-wallpapers.sh)
 set -euo pipefail
 
@@ -13,7 +15,7 @@ DEST_TIMER="${UNIT_DIR}/random-wallpaper.timer"
 log() { printf "[*] %s\n" "$1"; }
 ok() { printf "[OK] %s\n" "$1"; }
 
-mkdir -p "$BIN_DIR" "$UNIT_DIR"
+mkdir -p "$BIN_DIR"
 
 # ---------- script de wallpaper (embutido) ----------
 cat > "$DEST_SCRIPT" <<'WALLSCRIPT_EOF'
@@ -22,7 +24,7 @@ set -euo pipefail
 
 # O timer pode sobreviver a trocas de sessao; leia o ambiente do login ativo.
 session_env=$(python3 - <<'PY_SESSION'
-import os, pathlib, shlex, subprocess
+import os, pathlib, shlex, shutil, subprocess
 uid = str(os.getuid())
 def run(*args):
     return subprocess.check_output(args, text=True, stderr=subprocess.DEVNULL)
@@ -70,7 +72,7 @@ merged["XDG_SESSION_TYPE"] = props["Type"]
 merged["XDG_SESSION_ID"] = sid
 if props.get("Desktop"):
     merged["XDG_CURRENT_DESKTOP"] = props["Desktop"]
-if props["Type"] == "wayland" and not merged.get("WAYLAND_DISPLAY"):
+if props["Type"] == "wayland" and not merged.get("WAYLAND_DISPLAY") and shutil.which("systemctl"):
     # O ambiente importado pelo compositor cobre sessoes UWSM.
     fallback = dict(item.split("=", 1) for item in run(
         "systemctl", "--user", "show-environment").splitlines() if "=" in item)
@@ -137,6 +139,41 @@ printf 'random-wallpaper: sessao=%s desktop=%s imagem=%s\n' "$XDG_SESSION_ID" "$
 WALLSCRIPT_EOF
 sed -i 's/\r$//' "$DEST_SCRIPT"
 chmod +x "$DEST_SCRIPT"
+
+# ---------- sem systemd: runit (Void) ou autostart XDG ----------
+if [[ ! -d /run/systemd/system ]]; then
+  if [[ -d /etc/sv && -d /var/service ]] && command -v runsvdir >/dev/null; then
+    # serviço runit do usuário (Void Handbook): runsvdir próprio do usuário em ~/service, iniciado no boot
+    SVDIR="${HOME}/service/random-wallpaper"
+    mkdir -p "$SVDIR"
+    # runsv reinicia o run quando ele termina: troca o wallpaper e espera 90 s = timer de 90 s
+    printf '#!/bin/sh\nexec 2>&1\nexport XDG_RUNTIME_DIR=/run/user/$(id -u)\n"$HOME/.bin/random-wallpaper.sh"\nexec sleep 90\n' > "$SVDIR/run"
+    chmod +x "$SVDIR/run"
+    U=$(id -un)
+    if [[ ! -d "/etc/sv/runsvdir-${U}" ]]; then
+      log "criando /etc/sv/runsvdir-${U} (sudo)"
+      sudo mkdir -p "/etc/sv/runsvdir-${U}"
+      printf '#!/bin/sh\nexport USER="%s"\nexport HOME="%s"\ngroups="$(id -Gn "$USER" | tr " " ":")"\nexec chpst -u "$USER:$groups" runsvdir "$HOME/service"\n' "$U" "$HOME" | sudo tee "/etc/sv/runsvdir-${U}/run" >/dev/null
+      sudo chmod +x "/etc/sv/runsvdir-${U}/run"
+    fi
+    [[ -e "/var/service/runsvdir-${U}" ]] || sudo ln -s "/etc/sv/runsvdir-${U}" /var/service/
+    "$DEST_SCRIPT" || true
+    ok "Instalado: ${DEST_SCRIPT}"
+    ok "Serviço runit: ${SVDIR} (via /var/service/runsvdir-${U}); status: sv status ${SVDIR}"
+  else
+    # sem gerenciador de serviços do usuário: laço iniciado pelo autostart XDG da sessão
+    LOOP="${BIN_DIR}/random-wallpaper-loop.sh"
+    printf '#!/bin/sh\n# uma instância só; troca o wallpaper a cada 90 s\nexec 9>"/tmp/random-wallpaper-$(id -u).lock"\nflock -n 9 || exit 0\nwhile :; do "$HOME/.bin/random-wallpaper.sh"; sleep 90; done\n' > "$LOOP"
+    chmod +x "$LOOP"
+    mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/autostart"
+    printf '[Desktop Entry]\nType=Application\nName=Wallpaper aleatório\nExec=%s\nNoDisplay=true\n' "$LOOP" > "${XDG_CONFIG_HOME:-$HOME/.config}/autostart/random-wallpaper.desktop"
+    "$DEST_SCRIPT" || true
+    ok "Instalado: ${DEST_SCRIPT}"
+    ok "Laço: ${LOOP} (autostart XDG; WMs sem autostart XDG: chamar o laço no autostart do WM)"
+  fi
+  exit 0
+fi
+mkdir -p "$UNIT_DIR"
 
 # ---------- service (embutido) ----------
 cat > "$DEST_SERVICE" <<'SERVICE_EOF'
