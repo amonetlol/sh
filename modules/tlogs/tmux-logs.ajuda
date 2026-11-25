@@ -1,21 +1,18 @@
-  tlogs — atalhos            (prefixo: Ctrl+b, soltar, depois a tecla)   ·   q fecha esta ajuda
+  tlogs — atalhos            (prefixo: Ctrl+b)   ·   q fecha esta ajuda
 
   ── tlogs (personalizados) ───────────────────────────────────────────────
-   Layouts (o modo atual aparece na barra entre [ ]):
-   z        zoom no painel ativo (liga/desliga)
+   Layouts:
+   z        zoom
    h        horizontal: lado a lado
-   v        vertical: empilhado, PC 70% em cima            (padrão)
+   v        vertical: empilhado
    =        metade / metade (empilhado)
-   t        Tab: um painel por vez em tela cheia — Tab alterna
-   T        Tiling: grade
-   m        Multi: PC 65% à esquerda, Void à direita
+   t        Tab
+   T        Tiling
+   m        Multi
    Tab      próximo painel (mantém o zoom no modo Tab)
+   0 / 1    troca o painel atual com o painel 0 / 1
    ?        esta ajuda
-   clique   as letras da barra (z h v = t T m e "? ajuda") também ativam o layout
-            swp alterna os layouts a cada clique (h → v → = → T → m)
-            󰒲 (amarelo, à direita) suspende: sai do tlogs sem encerrar o tmux · 󰅖 (vermelho) fecha: encerra o tmux
-            + abre um painel novo (shell) · - fecha o painel ativo (o principal do PC não fecha)
-   q        fecha o tlogs (encerra o tmux dele; os logs continuam nos arquivos)
+   q        fecha o tlogs
    painéis  PC (ssh pc) sempre · Void só durante instalação local (some após 3 min parado)
             + 1 painel por trabalho em paralelo no PC (/tmp/ff-install-<nome>.log): abre sozinho, some após 3 min parado
    barra    direita = term-hub status do PC (CPU RAM SWP / rede load uptime), a cada 2 s
@@ -26,8 +23,8 @@
    :        linha de comando do tmux
 
   ── tmux padrão: painéis ─────────────────────────────────────────────────
-   %        nova pane ao lado (divide na vertical)
-   "        nova pane embaixo (divide na horizontal)
+   %        nova pane na vertical
+   "        nova pane na horizontal
    setas    vai para o painel na direção     o    próximo painel
    x        fecha o painel
    ;        painel anterior                  q    (tmux padrão: números dos painéis — aqui é "fecha o tlogs")
